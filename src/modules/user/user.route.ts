@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { UserController } from "./user.controller";
-import { authorize } from "../../middlewares/authorize";
+import checkAdmin from "../../middlewares/checkAdmin";
 import catchAsync from "../../shared/catchAsync";
 
 const router = Router();
 
 router.post("/", UserController.createUser);
-router.get("/", authorize(["ADMIN"]), catchAsync(UserController.getAllUsers));
-router.get("/:id", authorize(["ADMIN"]), catchAsync(UserController.getSingleUser));
+router.get("/", checkAdmin(), catchAsync(UserController.getAllUsers));
+router.get("/:id", checkAdmin(), catchAsync(UserController.getSingleUser));
 
 export const UserRouter = router;

@@ -3,6 +3,7 @@ import { prisma } from "../../shared/prisma";
 interface ICreateCategory {
   name: string;
   description?: string;
+  slug: string;
 }
 
 const createCategory = async (payload: ICreateCategory) => {

@@ -4,13 +4,20 @@ const createUser = async (payload: {
   name: string;
   email: string;
   password: string;
+  role?: "ADMIN" | "CUSTOMER";
 }) => {
   const user = await prisma.user.create({
-    data: payload,
+    data: {
+      name: payload.name,
+      email: payload.email,
+      password: payload.password,
+      role: payload.role ?? "CUSTOMER",
+    },
   });
 
   return user;
 };
+
 
 const getAllUsers = async () => {
   return prisma.user.findMany({
