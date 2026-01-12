@@ -27,7 +27,7 @@ const createProduct = async (payload: CreateProductPayload) => {
 const getAllProducts = async () => {
   return prisma.product.findMany({
     orderBy: { createdAt: "desc" },
-    include: { category: true }, // include category details
+    include: { category: true }, 
   });
 };
 

@@ -10,7 +10,7 @@ router.patch("/:id", checkAdmin(), ProductController.updateProduct);
 router.delete("/:id", checkAdmin(), ProductController.deleteProduct);
 
 // Public routes
-router.get("/", checkAdmin(), ProductController.getAllProducts);
-router.get("/:id", checkAdmin(), ProductController.getSingleProduct);
+router.get("/", ProductController.getAllProducts);
+router.get("/:id", ProductController.getSingleProduct);
 
 export const ProductRouter = router;

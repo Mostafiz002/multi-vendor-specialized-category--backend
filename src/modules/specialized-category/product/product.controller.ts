@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { ProductService } from "./product.service";
+import { createProductSchema, updateProductSchema } from "./product.validation";
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body; // validation can be added later
-  const result = await ProductService.createProduct(payload);
+  const validatedData = createProductSchema.parse(req.body); 
+  const result = await ProductService.createProduct(validatedData);
 
   sendResponse(res, {
     statusCode: 201,
@@ -40,8 +41,8 @@ const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
 
 const updateProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const payload = req.body;
-  const result = await ProductService.updateProduct(id, payload);
+  const validatedData = updateProductSchema.parse(req.body); // Zod validation
+  const result = await ProductService.updateProduct(id, validatedData);
 
   sendResponse(res, {
     statusCode: 200,

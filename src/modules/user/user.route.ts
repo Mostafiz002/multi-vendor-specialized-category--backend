@@ -6,7 +6,7 @@ import catchAsync from "../../shared/catchAsync";
 const router = Router();
 
 router.post("/", UserController.createUser);
-router.get("/", checkAdmin(), catchAsync(UserController.getAllUsers));
+router.get("/",  catchAsync(UserController.getAllUsers));
 router.get("/:id", checkAdmin(), catchAsync(UserController.getSingleUser));
 
 export const UserRouter = router;
