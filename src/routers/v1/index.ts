@@ -7,8 +7,8 @@ import { OrderRouter } from "../../modules/specialized-category/order/order.rout
 const router = Router();
 
 router.use("/users", UserRouter);
-router.use("/categories", CategoryRouter);
-router.use("/products", ProductRouter);
+router.use("/categories/specialized-category", CategoryRouter);
+router.use("/categories/specialized-category/products", ProductRouter);
 router.use("/orders", OrderRouter);
 
 export default router;

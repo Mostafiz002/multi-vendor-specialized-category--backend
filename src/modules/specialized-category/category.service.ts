@@ -1,15 +1,24 @@
 import { prisma } from "../../shared/prisma";
+import { slugify } from "../../helper/slugify";
+import { generateUniqueSlug } from "../../helper/generateUniqueSlug";
 
 interface ICreateCategory {
   name: string;
   description?: string;
-  slug: string;
 }
 
 const createCategory = async (payload: ICreateCategory) => {
+  const baseSlug = slugify(payload.name);
+  const slug = await generateUniqueSlug(baseSlug, prisma, "category");
+
   const category = await prisma.category.create({
-    data: payload,
+    data: {
+      name: payload.name,
+      description: payload.description,
+      slug,
+    },
   });
+
   return category;
 };
 
@@ -32,7 +41,10 @@ const getCategoryById = async (id: string) => {
   return category;
 };
 
-const updateCategory = async (id: string, payload: Partial<ICreateCategory>) => {
+const updateCategory = async (
+  id: string,
+  payload: Partial<ICreateCategory>
+) => {
   const category = await prisma.category.update({
     where: { id },
     data: payload,
