@@ -1,21 +1,54 @@
 import { z } from "zod";
 
-// Schema to create a product
+/**
+ * ENUMS (must match Prisma enums)
+ */
+export const productTypeEnum = z.enum(["PHYSICAL", "DIGITAL", "SERVICE"]);
+export const productStatusEnum = z.enum([
+  "DRAFT",
+  "ACTIVE",
+  "INACTIVE",
+  "OUT_OF_STOCK",
+  "DISCONTINUED",
+]);
+
+/**
+ * CREATE PRODUCT
+ */
 export const createProductSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
+  sku: z.string().min(1),
+  name: z.string().min(1),
+
   description: z.string().optional(),
-  price: z.number().positive("Price must be a positive number"),
-  stock: z.number().int().nonnegative("Stock must be 0 or more").optional(),
-  categoryId: z.string().uuid("Invalid category ID"),
-  isActive: z.boolean().optional(),
+  shortDescription: z.string().optional(),
+
+  productType: z.enum(["PHYSICAL", "DIGITAL", "SERVICE"]),
+  status: z
+    .enum(["DRAFT", "ACTIVE", "INACTIVE", "OUT_OF_STOCK", "DISCONTINUED"])
+    .optional(),
+
+  basePrice: z.number().positive(),
+  salePrice: z.number().optional(),
+  costPrice: z.number().optional(),
+
+  isFeatured: z.boolean().optional(),
+  isEcoFriendly: z.boolean().optional(),
+  isHandmade: z.boolean().optional(),
+  isLocal: z.boolean().optional(),
+  isSustainable: z.boolean().optional(),
+
+   categoryId: z.string(),
 });
 
-// Schema to update a product (all fields optional)
-export const updateProductSchema = z.object({
-  name: z.string().min(1).optional(),
-  description: z.string().optional(),
-  price: z.number().positive().optional(),
-  stock: z.number().int().nonnegative().optional(),
-  categoryId: z.string().uuid().optional(),
-  isActive: z.boolean().optional(),
+/**
+ * UPDATE PRODUCT
+ */
+export const updateProductSchema = createProductSchema.partial();
+
+
+/**
+ * PARAM VALIDATION
+ */
+export const productIdParamSchema = z.object({
+  id: z.string().cuid("Invalid product ID"),
 });

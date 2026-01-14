@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
-import sendResponse from "../../shared/sendResponse";
 import catchAsync from "../../shared/catchAsync";
+import sendResponse from "../../shared/sendResponse";
 import { CategoryService } from "./category.service";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "./category.validation";
 
-const createCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await CategoryService.createCategory(req.body);
+export const createCategory = catchAsync(async (req: Request, res: Response) => {
+  const validatedData = createCategorySchema.parse(req.body);
+
+  const result = await CategoryService.createCategory(validatedData);
 
   sendResponse(res, {
     statusCode: 201,
@@ -14,57 +20,45 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllCategories = catchAsync(async (_req: Request, res: Response) => {
+export const getAllCategories = catchAsync(async (_req, res) => {
   const result = await CategoryService.getAllCategories();
 
-  sendResponse(res, {
-    statusCode: 200,
+  res.json({
     success: true,
-    message: "Categories retrieved successfully",
     data: result,
   });
 });
 
-const getCategoryById = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await CategoryService.getCategoryById(id);
+export const getSingleCategory = catchAsync(async (req, res) => {
+  const result = await CategoryService.getSingleCategory(req.params.id);
 
-  sendResponse(res, {
-    statusCode: 200,
+  res.json({
     success: true,
-    message: "Category retrieved successfully",
     data: result,
   });
 });
 
-const updateCategory = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await CategoryService.updateCategory(id, req.body);
+export const updateCategory = catchAsync(async (req, res) => {
+  const validatedData = updateCategorySchema.parse(req.body);
 
-  sendResponse(res, {
-    statusCode: 200,
+  const result = await CategoryService.updateCategory(
+    req.params.id,
+    validatedData
+  );
+
+  res.json({
     success: true,
     message: "Category updated successfully",
     data: result,
   });
 });
 
-const deleteCategory = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await CategoryService.deleteCategory(id);
+export const deleteCategory = catchAsync(async (req, res) => {
+  const result = await CategoryService.deleteCategory(req.params.id);
 
-  sendResponse(res, {
-    statusCode: 200,
+  res.json({
     success: true,
-    message: "Category deleted successfully (soft delete)",
+    message: "Category deactivated successfully",
     data: result,
   });
 });
-
-export const CategoryController = {
-  createCategory,
-  getAllCategories,
-  getCategoryById,
-  updateCategory,
-  deleteCategory,
-};

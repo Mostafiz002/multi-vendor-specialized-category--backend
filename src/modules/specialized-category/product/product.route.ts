@@ -1,16 +1,18 @@
 import { Router } from "express";
-import { ProductController } from "./product.controller";
-import checkAdmin from "../../../middlewares/checkAdmin";
+import {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  getSingleProduct,
+  updateProduct,
+} from "./product.controller";
 
 const router = Router();
 
-// Admin-only routes
-router.post("/", checkAdmin(), ProductController.createProduct);
-router.patch("/:id", checkAdmin(), ProductController.updateProduct);
-router.delete("/:id", checkAdmin(), ProductController.deleteProduct);
-
-// Public routes
-router.get("/", ProductController.getAllProducts);
-router.get("/:id", ProductController.getSingleProduct);
+router.post("/", createProduct);
+router.get("/", getAllProducts);
+router.get("/:id", getSingleProduct);
+router.patch("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
 
 export const ProductRouter = router;

@@ -7,6 +7,6 @@ const router = Router();
 
 router.post("/", UserController.createUser);
 router.get("/",  catchAsync(UserController.getAllUsers));
-router.get("/:id", checkAdmin(), catchAsync(UserController.getSingleUser));
+router.get("/:id",  catchAsync(UserController.getSingleUser));
 
 export const UserRouter = router;

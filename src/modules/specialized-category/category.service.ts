@@ -2,36 +2,51 @@ import { prisma } from "../../shared/prisma";
 import { slugify } from "../../helper/slugify";
 import { generateUniqueSlug } from "../../helper/generateUniqueSlug";
 
-interface ICreateCategory {
+interface CreateCategoryPayload {
   name: string;
   description?: string;
+  parentId?: string;
+  storeType?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  image?: string;
 }
 
-const createCategory = async (payload: ICreateCategory) => {
+const createCategory = async (payload: CreateCategoryPayload) => {
   const baseSlug = slugify(payload.name);
-  const slug = await generateUniqueSlug(baseSlug, prisma, "category");
+  const slug = await generateUniqueSlug(baseSlug, prisma.category);
 
-  const category = await prisma.category.create({
+  return prisma.category.create({
     data: {
       name: payload.name,
-      description: payload.description,
       slug,
+      description: payload.description,
+      parentId: payload.parentId,
+      storeType: payload.storeType,
+      metaTitle: payload.metaTitle,
+      metaDescription: payload.metaDescription,
+      image: payload.image,
     },
   });
-
-  return category;
 };
 
 const getAllCategories = async () => {
-  const categories = await prisma.category.findMany({
+  return prisma.category.findMany({
+    where: { isActive: true },
     orderBy: { createdAt: "desc" },
+    include: {
+      children: false,
+    },
   });
-  return categories;
 };
 
-const getCategoryById = async (id: string) => {
+const getSingleCategory = async (id: string) => {
   const category = await prisma.category.findUnique({
     where: { id },
+    include: {
+      children: true,
+      parent: true,
+    },
   });
 
   if (!category) {
@@ -43,27 +58,25 @@ const getCategoryById = async (id: string) => {
 
 const updateCategory = async (
   id: string,
-  payload: Partial<ICreateCategory>
+  payload: Partial<CreateCategoryPayload>
 ) => {
-  const category = await prisma.category.update({
+  return prisma.category.update({
     where: { id },
     data: payload,
   });
-  return category;
 };
 
 const deleteCategory = async (id: string) => {
-  const category = await prisma.category.update({
+  return prisma.category.update({
     where: { id },
     data: { isActive: false },
   });
-  return category;
 };
 
 export const CategoryService = {
   createCategory,
   getAllCategories,
-  getCategoryById,
+  getSingleCategory,
   updateCategory,
   deleteCategory,
 };
