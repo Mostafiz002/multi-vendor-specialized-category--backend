@@ -1,0 +1,27 @@
+
+// ============================================
+// CATEGORY SYSTEM
+// ============================================
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  parentId    String?  // null for root category
+  storeType   String?  // eco-friendly, sustainable, handmade, local, digital, ebook, software, service, event, party
+  metaTitle       String?
+  metaDescription String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Category[] @relation("CategoryHierarchy")
+  products  Product[]
+  
+  @@index([slug])
+  @@index([parentId])
+  @@index([storeType])
+}
