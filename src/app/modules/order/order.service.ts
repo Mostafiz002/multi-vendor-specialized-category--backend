@@ -1,4 +1,4 @@
-import { prisma } from "../../../shared/prisma";
+import { prisma } from "../../shared/prisma";
 
 interface OrderItemPayload {
   productId: string;
@@ -20,7 +20,7 @@ const createOrder = async (payload: CreateOrderPayload) => {
       totalAmount: payload.totalAmount,
       status: payload.status ?? "PENDING",
       items: {
-        create: payload.items.map(item => ({
+        create: payload.items.map((item) => ({
           productId: item.productId,
           quantity: item.quantity,
           price: item.price,
@@ -51,7 +51,10 @@ const getSingleOrder = async (id: string) => {
   return order;
 };
 
-const updateOrderStatus = async (id: string, status: CreateOrderPayload["status"]) => {
+const updateOrderStatus = async (
+  id: string,
+  status: CreateOrderPayload["status"]
+) => {
   const order = await prisma.order.update({
     where: { id },
     data: { status },

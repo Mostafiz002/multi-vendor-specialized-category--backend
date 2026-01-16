@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { OrderController } from "./order.controller";
-import checkAdmin from "../../../middlewares/checkAdmin";
 
 const router = Router();
 

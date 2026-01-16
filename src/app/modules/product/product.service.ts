@@ -1,6 +1,6 @@
-import { prisma } from "../../../shared/prisma";
-import { slugify } from "../../../helper/slugify";
-import { generateUniqueSlug } from "../../../helper/generateUniqueSlug";
+import { prisma } from "../../shared/prisma";
+import { slugify } from "../../helper/slugify";
+import { generateUniqueSlug } from "../../helper/generateUniqueSlug";
 
 interface CreateProductPayload {
   sku: string;
@@ -23,7 +23,6 @@ interface CreateProductPayload {
 
   categoryId: string;
 }
-
 
 const createProduct = async (payload: CreateProductPayload) => {
   const baseSlug = slugify(payload.name);
@@ -57,16 +56,15 @@ const createProduct = async (payload: CreateProductPayload) => {
   });
 };
 
-
 const getAllProducts = async () => {
   return prisma.product.findMany({
     orderBy: { createdAt: "desc" },
     include: {
       category: false,
+      images: false,
     },
   });
 };
-
 
 const getSingleProduct = async (id: string) => {
   const product = await prisma.product.findUnique({
@@ -82,7 +80,6 @@ const getSingleProduct = async (id: string) => {
   if (!product) throw new Error("Product not found");
   return product;
 };
-
 
 const updateProduct = async (
   id: string,

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import catchAsync from "../../../shared/catchAsync";
-import sendResponse from "../../../shared/sendResponse";
+import catchAsync from "../../shared/catchAsync";
+import sendResponse from "../../shared/sendResponse";
 import { OrderService } from "./order.service";
 import { createOrderSchema, updateOrderStatusSchema } from "./order.validation";
 
