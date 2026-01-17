@@ -26,22 +26,18 @@ model Product {
   slug        String   @unique
   description String?  @db.Text
   shortDescription String? @db.Text
-  
   productType ProductType
   status      ProductStatus @default(DRAFT)
- 
-  // Pricing
   basePrice   Decimal  @db.Decimal(10, 2)
   salePrice   Decimal? @db.Decimal(10, 2)
   costPrice   Decimal? @db.Decimal(10, 2)
   
   // Weight & Dimensions (for shipping)
-  weight      Decimal? @db.Decimal(10, 2) // in kg
-  length      Decimal? @db.Decimal(10, 2) // in cm
-  width       Decimal? @db.Decimal(10, 2) // in cm
-  height      Decimal? @db.Decimal(10, 2) // in cm
-  
-  // SEO
+  weight      Decimal? @db.Decimal(10, 2)
+  length      Decimal? @db.Decimal(10, 2)
+  width       Decimal? @db.Decimal(10, 2)
+  height      Decimal? @db.Decimal(10, 2)
+
   metaTitle       String?
   metaDescription String?
   metaKeywords    String?
@@ -53,10 +49,9 @@ model Product {
   isLocal         Boolean @default(false)
   isSustainable   Boolean @default(false)
   isOrganic       Boolean @default(false)
-  isHalal         Boolean @default(false)     // For Islamic products
-  isSunnahBased   Boolean @default(false)     // For Sunnah Health
+  isHalal         Boolean @default(false)    
+  isSunnahBased   Boolean @default(false)    
   
-  // Timestamps
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   publishedAt DateTime?
@@ -65,14 +60,13 @@ model Product {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  // Relations
   images              ProductImage[]
   variants            ProductVariant[]
   inventory           Inventory?
-  healthWellness      HealthWellness?      // For Sunnah Health, Personal Care
-  eventSupply         EventSupply?         // For Event/Party items
-  repairKit           RepairKit?           // For Repair Kits
-  islamicDecor        IslamicDecor?        // For Islamic Art
+  healthWellness      HealthWellness?   
+  eventSupply         EventSupply?       
+  repairKit           RepairKit?          
+  islamicDecor        IslamicDecor?       
   attributes          ProductAttribute[]
   
   @@index([productType])

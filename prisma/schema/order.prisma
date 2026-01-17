@@ -26,6 +26,7 @@ model OrderItem {
   price     Float
 
   order     Order    @relation(fields: [orderId], references: [id])
+  
 
   @@unique([orderId, productId])
 }

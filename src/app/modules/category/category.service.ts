@@ -21,7 +21,6 @@ const createCategory = async (payload: CreateCategoryPayload) => {
       name: payload.name,
       slug,
       description: payload.description,
-      parentId: payload.parentId,
       storeType: payload.storeType,
       metaTitle: payload.metaTitle,
       metaDescription: payload.metaDescription,
@@ -34,19 +33,12 @@ const getAllCategories = async () => {
   return prisma.category.findMany({
     where: { isActive: true },
     orderBy: { createdAt: "desc" },
-    include: {
-      children: false,
-    },
   });
 };
 
 const getSingleCategory = async (id: string) => {
   const category = await prisma.category.findUnique({
     where: { id },
-    include: {
-      children: true,
-      parent: true,
-    },
   });
 
   if (!category) {
@@ -66,10 +58,25 @@ const updateCategory = async (
   });
 };
 
-const deleteCategory = async (id: string) => {
+const deactivateCategory = async (id: string) => {
   return prisma.category.update({
     where: { id },
     data: { isActive: false },
+  });
+};
+
+const deleteCategory = async (id: string) => {
+  // Optional safety check
+  const category = await prisma.category.findUnique({
+    where: { id },
+  });
+
+  if (!category) {
+    throw new Error("Category not found");
+  }
+
+  return prisma.category.delete({
+    where: { id },
   });
 };
 
@@ -78,5 +85,6 @@ export const CategoryService = {
   getAllCategories,
   getSingleCategory,
   updateCategory,
+  deactivateCategory,
   deleteCategory,
 };

@@ -7,7 +7,7 @@ import {
   updateCategorySchema,
 } from "./category.validation";
 
-export const createCategory = catchAsync(async (req: Request, res: Response) => {
+const createCategory = catchAsync(async (req: Request, res: Response) => {
   const validatedData = createCategorySchema.parse(req.body);
 
   const result = await CategoryService.createCategory(validatedData);
@@ -20,25 +20,29 @@ export const createCategory = catchAsync(async (req: Request, res: Response) => 
   });
 });
 
-export const getAllCategories = catchAsync(async (_req, res) => {
+const getAllCategories = catchAsync(async (_req, res) => {
   const result = await CategoryService.getAllCategories();
 
-  res.json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
+    message: "Categories retrieved successfully",
     data: result,
   });
 });
 
-export const getSingleCategory = catchAsync(async (req, res) => {
+const getSingleCategory = catchAsync(async (req, res) => {
   const result = await CategoryService.getSingleCategory(req.params.id);
 
-  res.json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
+    message: "Category retrieved successfully",
     data: result,
   });
 });
 
-export const updateCategory = catchAsync(async (req, res) => {
+const updateCategory = catchAsync(async (req, res) => {
   const validatedData = updateCategorySchema.parse(req.body);
 
   const result = await CategoryService.updateCategory(
@@ -46,19 +50,41 @@ export const updateCategory = catchAsync(async (req, res) => {
     validatedData
   );
 
-  res.json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
     message: "Category updated successfully",
     data: result,
   });
 });
 
-export const deleteCategory = catchAsync(async (req, res) => {
-  const result = await CategoryService.deleteCategory(req.params.id);
+const deactivateCategory = catchAsync(async (req, res) => {
+  const result = await CategoryService.deactivateCategory(req.params.id);
 
-  res.json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
     message: "Category deactivated successfully",
     data: result,
   });
 });
+
+const deleteCategory = catchAsync(async (req: Request, res: Response) => {
+  const result = await CategoryService.deleteCategory(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Category deleted successfully",
+    data: result,
+  });
+});
+
+export const categoryController = {
+  createCategory,
+  getAllCategories,
+  deactivateCategory,
+  updateCategory,
+  getSingleCategory,
+  deleteCategory,
+};

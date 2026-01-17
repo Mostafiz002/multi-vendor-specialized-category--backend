@@ -35,15 +35,13 @@ const createOrder = async (payload: CreateOrderPayload) => {
 
 const getAllOrders = async () => {
   return prisma.order.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { items: { include: { product: false } }, user: false },
+    orderBy: { createdAt: "desc" }
   });
 };
 
 const getSingleOrder = async (id: string) => {
   const order = await prisma.order.findUnique({
-    where: { id },
-    include: { items: { include: { product: true } }, user: true },
+    where: { id }
   });
 
   if (!order) throw new Error("Order not found");
